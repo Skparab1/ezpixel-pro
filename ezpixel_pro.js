@@ -122,8 +122,27 @@ function draw() {
     }
     
     fill(150);
-    rect(800,0,200,600);
+    rect(750,0,300,600);
     
+    let cplus = 0;
+    let ypos = 0;
+    
+    while (ypos < 510){
+      let xpos = 750;
+      let cc = 0;
+      while (xpos <= 1300){
+        red = (255-Math.abs(255-cc))+100;
+        green = (255-Math.abs(510-cc))+100;
+        blue = (255-Math.abs(765-cc))+100;
+        stroke(red+cplus,green+cplus,blue+cplus);
+        fill(red+cplus,green+cplus,blue+cplus);
+        rect(xpos,ypos,1,1);
+        cc += 4;
+        xpos += 1;
+      }
+      cplus += 0;
+      ypos += 1;
+    }
     
   }
   
