@@ -23,8 +23,12 @@ var bwx = 900;
 var bwy = 175;
 
 var cplus = 0;
-var colornow;
+var colornow = [10,265,190];
 var tintcolor = [255,255,255];
+
+var linearray = [];
+var oldpoint = [0,0];
+var linecolors = [];
 
 function draw() {
   clear();
@@ -121,13 +125,14 @@ function draw() {
     rect(0,0,1000,500);
     fill(200,0,0);
     textSize(60);
-    text('Uploading....',500,200);
+    text('Uploading....',300,200);
     text('Wait for it',300,300);
   } else if (img) {
-    tint(tintcolor[0],tintcolor[1],tintcolor[2]);
-    if (img.height < img.width){
+    if (img.height <= img.width){
+      tint(0, 153, 204);
       image(img, 0, 0, width-300, ((width-300)*img.height)/img.width);
     } else {
+      tint(0, 153, 204);
       image(img, 0, 0, (height*img.width)/img.height, height);
     }
     
@@ -144,15 +149,15 @@ function draw() {
       let xpos = 750;
       let cc = 0;
       while (xpos <= 1300){
-        red = (255-Math.abs(255-cc))+100;
-        green = (255-Math.abs(510-cc))+100;
-        blue = (255-Math.abs(765-cc))+100;
+        red = (255-Math.abs(255-cc))+100; // = 10
+        green = (255-Math.abs(510-cc))+100; //265
+        blue = (255-Math.abs(765-cc))+100;  // 190
         stroke(red+cplus,green+cplus,blue+cplus);
         fill(red+cplus,green+cplus,blue+cplus);
         rect(xpos,ypos,1,1);
         cc += 4;
         xpos += 1;
-        
+
         if (xpos == colorx){
           colornow = [red,green,blue];
         }      
@@ -182,6 +187,7 @@ function draw() {
     text('Current color',775,130);
     
     fill(colornow[0],colornow[1],colornow[2]);
+    tintcolor = [colornow[0],colornow[1],colornow[2]];
     rect(910,110,50,20);
     
     fill(200);
@@ -190,7 +196,26 @@ function draw() {
     fill(0);
     text('Tint',775,250);
     text('Draw',935,250);
+    stroke(colornow[0],colornow[1],colornow[2]);
     
+    let c = 0;
+    try{
+    for(i = 0;i<=linearray.length;i+=2){
+      point_x = linearray[i];
+      point_y = linearray[i+1];
+      strokeWeight(10); 
+      if (oldpoint[0] != 0 && oldpoint[1] != 0 && linearray[i] != '' && linearray[i] != ''){
+        stroke(linecolors[c],linecolors[c+1],linecolors[c+2]);
+        fill(linecolors[c],linecolors[c+1],linecolors[c+2]);
+        line(oldpoint[0],oldpoint[1],point_x,point_y);
+      }
+      oldpoint = [point_x,point_y];
+      c += 3;
+    }
+  } catch(error){
+    let blank = '';
+  } 
+    strokeWeight(2);
   }
   
 }
@@ -205,36 +230,50 @@ function handleFile(file) {
   }
 }
 
+function mouseReleased(){
+  linearray.push('');
+  linearray.push('');
+}
+
 function mouseDragged(){
   if (mouseX > 750 && mouseY > 50 && mouseY < 100){
     colorx = mouseX;
     colory = mouseY;
-  }
-  if (mouseX > 750 && mouseY > 150 && mouseY < 200){
+  } else if (mouseX > 750 && mouseY > 150 && mouseY < 200){
     bwx = mouseX;
     bwy = mouseY;
+  } else {
+    linearray.push(mouseX);
+    linearray.push(mouseY);
+    let c1 = colornow[0];
+    let c2 = colornow[1];
+    let c3 = colornow[2];
+    linecolors.push(c1);
+    linecolors.push(c2);
+    linecolors.push(c3);
   }
-  
-  
-  
 }
 
 function mousePressed(){
   if (mouseX > 600 && mouseX < 700 && mouseY > 300 && mouseY < 450){
     startedupload = true;
-  }
-  
-  if (mouseX > 750 && mouseY > 50 && mouseY < 100){
+  } else if (mouseX > 750 && mouseY > 50 && mouseY < 100){
     colorx = mouseX;
     colory = mouseY;
-  }
-  if (mouseX > 750 && mouseY > 150 && mouseY < 200){
+  } else if (mouseX > 750 && mouseY > 150 && mouseY < 200){
     bwx = mouseX;
     bwy = mouseY;
-  }
-
-  if (mouseX > 760 && mouseX < 860 && mouseY > 225 && mouseY < 225+35){
+  } else if (mouseX > 760 && mouseX < 860 && mouseY > 225 && mouseY < 225+35){
     tintcolor = [colornow[0],colornow[1],colornow[2]];
     print('did tint');
+  } else {
+    //linearray.push(mouseX);
+    //linearray.push(mouseY);
+    //let c1 = colornow[0];
+    //let c2 = colornow[1];
+    //let c3 = colornow[2];
+    //linecolors.push(c1);
+    //linecolors.push(c2);
+    //linecolors.push(c3);
   }
 }
