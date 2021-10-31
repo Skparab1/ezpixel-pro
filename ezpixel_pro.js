@@ -3,7 +3,7 @@ let img;
 
 function setup() {
   
-  createCanvas(1000,420);  
+  createCanvas(1024,420);  
   textSize(18);
   //text("Click on the file input and select a file.", 20, 20);
   
@@ -16,6 +16,15 @@ var changingcolor = 0;
 var countervar = 680;
 var barcolor = 0;
 var startedupload = false;
+
+var colorx = 900;
+var colory = 75;
+var bwx = 900;
+var bwy = 175;
+
+var cplus = 0;
+var colornow;
+var tintcolor = [255,255,255];
 
 function draw() {
   clear();
@@ -115,8 +124,9 @@ function draw() {
     text('Uploading....',500,200);
     text('Wait for it',300,300);
   } else if (img) {
+    tint(tintcolor[0],tintcolor[1],tintcolor[2]);
     if (img.height < img.width){
-      image(img, 0, 0, width, (width*img.height)/img.width);
+      image(img, 0, 0, width-300, ((width-300)*img.height)/img.width);
     } else {
       image(img, 0, 0, (height*img.width)/img.height, height);
     }
@@ -124,10 +134,13 @@ function draw() {
     fill(150);
     rect(750,0,300,600);
     
-    let cplus = 0;
-    let ypos = 0;
+    textSize(30);
+    fill(0);
+    text('Colorpalette',800,45);
     
-    while (ypos < 510){
+    let ypos = 50;
+    
+    while (ypos < 100){
       let xpos = 750;
       let cc = 0;
       while (xpos <= 1300){
@@ -139,10 +152,44 @@ function draw() {
         rect(xpos,ypos,1,1);
         cc += 4;
         xpos += 1;
+        
+        if (xpos == colorx){
+          colornow = [red,green,blue];
+        }      
       }
-      cplus += 0;
-      ypos += 1;
+      ypos += 1;     
     }
+    
+    let bwcolorx = 750;
+    while (bwcolorx < 750+300){
+      stroke(bwcolorx-750);
+      fill(bwcolorx-750);
+      rect(bwcolorx,150,1,50);
+      
+      bwcolorx += 1;
+    }
+    
+    let bwdifference = bwx-900;
+    
+    colornow = [colornow[0]+bwdifference,colornow[1]+bwdifference,colornow[2]+bwdifference];
+    
+    stroke(255);
+    fill(0);
+    ellipse(colorx,colory,10,10);
+    ellipse(bwx,bwy,10,10);
+    
+    textSize(20);
+    text('Current color',775,130);
+    
+    fill(colornow[0],colornow[1],colornow[2]);
+    rect(910,110,50,20);
+    
+    fill(200);
+    rect(760,225,100,35);
+    rect(900,225,100,35);
+    fill(0);
+    text('Tint',775,250);
+    text('Draw',935,250);
     
   }
   
@@ -158,8 +205,36 @@ function handleFile(file) {
   }
 }
 
+function mouseDragged(){
+  if (mouseX > 750 && mouseY > 50 && mouseY < 100){
+    colorx = mouseX;
+    colory = mouseY;
+  }
+  if (mouseX > 750 && mouseY > 150 && mouseY < 200){
+    bwx = mouseX;
+    bwy = mouseY;
+  }
+  
+  
+  
+}
+
 function mousePressed(){
   if (mouseX > 600 && mouseX < 700 && mouseY > 300 && mouseY < 450){
     startedupload = true;
+  }
+  
+  if (mouseX > 750 && mouseY > 50 && mouseY < 100){
+    colorx = mouseX;
+    colory = mouseY;
+  }
+  if (mouseX > 750 && mouseY > 150 && mouseY < 200){
+    bwx = mouseX;
+    bwy = mouseY;
+  }
+
+  if (mouseX > 760 && mouseX < 860 && mouseY > 225 && mouseY < 225+35){
+    tintcolor = [colornow[0],colornow[1],colornow[2]];
+    print('did tint');
   }
 }
