@@ -150,12 +150,15 @@ function draw() {
     text('Uploading....',300,200);
     text('Wait for it',300,300);
   } else if (img) {
-    if (img.height <= img.width){
+    if (img.height >= 420){
+      tint(0, 153, 204);
+      image(img, 0, 0, (420*img.width)/img.height, 420);
+    } else if (img.height <= img.width){
       tint(0, 153, 204);
       image(img, 0, 0, width-300, ((width-300)*img.height)/img.width);
     } else {
       tint(0, 153, 204);
-      image(img, 0, 0, (height*img.width)/img.height, height);
+      image(img, 0, 0, (420*img.width)/img.height, 420);
     }
     
     if (downloader == 0){
