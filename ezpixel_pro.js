@@ -29,6 +29,13 @@ var tintcolor = [255,255,255];
 var linearray = [];
 var oldpoint = [0,0];
 var linecolors = [];
+var limiter = 0;
+var clicktext = false;
+var textarray = [];
+
+var cursorpos = [7000,7000];
+var cursorblinker = 0;
+var typed = '';
 
 function draw() {
   clear();
@@ -176,6 +183,8 @@ function draw() {
     
     let bwdifference = bwx-900;
     
+    bwdifference = bwdifference * 255/125;
+    
     colornow = [colornow[0]+bwdifference,colornow[1]+bwdifference,colornow[2]+bwdifference];
     
     stroke(255);
@@ -195,7 +204,7 @@ function draw() {
     rect(900,225,100,35);
     fill(0);
     text('Tint',775,250);
-    text('Draw',935,250);
+    text('Text',935,250);
     stroke(colornow[0],colornow[1],colornow[2]);
     
     let c = 0;
@@ -216,8 +225,53 @@ function draw() {
     let blank = '';
   } 
     strokeWeight(2);
+    
+    if (mouseX < 700){
+    fill(colornow[0],colornow[1],colornow[2]);
+    stroke(0);
+    ellipse(mouseX,mouseY,10,10);
+    }
+    
+    strokeWeight(2);
+    
+    if (cursorblinker < 6){
+      fill(0);
+      stroke(0);
+      rect(cursorpos[0],cursorpos[1],1,25);
+    } else if (cursorblinker >= 8){
+      cursorblinker = 0;
+    }
+
+    fill(colornow[0],colornow[1],colornow[2]);
+    stroke(255);
+    text(typed,cursorpos[0],cursorpos[1]);
+    
+    cursorblinker += 1;
+    
+    if (clicktext){
+      stroke(200);
+      fill(200);
+      rect(250,10,150,35);
+      fill(0);
+      stroke(0);
+      text('click to put text',260,20);
+    }
   }
   
+}
+
+function keyTyped(){
+
+  if (clicktext && keyCode != ENTER){
+    typed += key;
+  } 
+  keyCode = '';
+}
+
+function keyReleased(){
+  if (keyCode == BACKSPACE){
+    typed = typed.substring(0, typed.length -1);
+  } 
 }
 
 function handleFile(file) {
@@ -233,6 +287,9 @@ function handleFile(file) {
 function mouseReleased(){
   linearray.push('');
   linearray.push('');
+  linecolors.push('');
+  linecolors.push('');
+  linecolors.push('');
 }
 
 function mouseDragged(){
@@ -242,7 +299,7 @@ function mouseDragged(){
   } else if (mouseX > 750 && mouseY > 150 && mouseY < 200){
     bwx = mouseX;
     bwy = mouseY;
-  } else {
+  } else if (startedupload){
     linearray.push(mouseX);
     linearray.push(mouseY);
     let c1 = colornow[0];
@@ -266,14 +323,19 @@ function mousePressed(){
   } else if (mouseX > 760 && mouseX < 860 && mouseY > 225 && mouseY < 225+35){
     tintcolor = [colornow[0],colornow[1],colornow[2]];
     print('did tint');
-  } else {
-    //linearray.push(mouseX);
-    //linearray.push(mouseY);
-    //let c1 = colornow[0];
-    //let c2 = colornow[1];
-    //let c3 = colornow[2];
-    //linecolors.push(c1);
-    //linecolors.push(c2);
-    //linecolors.push(c3);
+  } else if (mouseX > 900 && mouseX < 1000 && mouseY > 225 && mouseY < 225+35){
+    print('did text');
+    clicktext = !clicktext;
+  } else if (clicktext){
+    cursorpos = [mouseX,mouseY];
+  } else if (startedupload){
+    linearray.push(mouseX);
+    linearray.push(mouseY);
+    let c1 = colornow[0];
+    let c2 = colornow[1];
+    let c3 = colornow[2];
+    linecolors.push(c1);
+    linecolors.push(c2);
+    linecolors.push(c3);
   }
 }
