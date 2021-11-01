@@ -44,9 +44,12 @@ var downloader = 0;
 function draw() {
   if (downloader == 0){
     createCanvas(1024,420); 
+  } else if (downloader == 1){
+    downloader = 2;
   } else {
-    let modified = get(0,0,750,846);
-    modified.save("image_mod.png");
+    let screen = get();
+    screen.copy(screen, 0, 0, 750, 0, 0, 0, 0, 846);
+    screen.save("image_mod.png");
     downloader = 0;
   }
   
@@ -155,6 +158,8 @@ function draw() {
       image(img, 0, 0, (height*img.width)/img.height, height);
     }
     
+    if (downloader == 0){
+      
     fill(150);
     rect(750,0,300,600);
     
@@ -218,6 +223,7 @@ function draw() {
     text('Tint',775,250);
     text('Text',935,250);
     stroke(colornow[0],colornow[1],colornow[2]);
+    }
     
     let c = 0;
     let s = 0;
@@ -263,13 +269,16 @@ function draw() {
     
     cursorblinker += 1;
     
+    if (downloader == 0){
+    
     if (clicktext){
       stroke(200);
       fill(200);
-      rect(250,10,150,35);
+      rect(250,0,225,23);
       fill(0);
       stroke(0);
-      text('click to put text',260,20);
+      textSize(20);
+      text('click a place to put text',260,20);
     }
     
     fill(0);
@@ -282,6 +291,7 @@ function draw() {
     fill(255);
     stroke(0);
     text('Download modified',815,350);
+    }
   }
   
 }
