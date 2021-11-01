@@ -37,7 +37,19 @@ var cursorpos = [7000,7000];
 var cursorblinker = 0;
 var typed = '';
 
+var size = 10;
+var drawsizes = [];
+var downloader = 0;
+
 function draw() {
+  if (downloader == 0){
+    createCanvas(1024,420); 
+  } else {
+    let modified = get(0,0,750,846);
+    modified.save("image_mod.png");
+    downloader = 0;
+  }
+  
   clear();
   
   if (!img && !startedupload){
@@ -208,18 +220,20 @@ function draw() {
     stroke(colornow[0],colornow[1],colornow[2]);
     
     let c = 0;
+    let s = 0;
     try{
     for(i = 0;i<=linearray.length;i+=2){
       point_x = linearray[i];
       point_y = linearray[i+1];
-      strokeWeight(10); 
+      strokeWeight(linecolors[c+3]); 
       if (oldpoint[0] != 0 && oldpoint[1] != 0 && linearray[i] != '' && linearray[i] != ''){
         stroke(linecolors[c],linecolors[c+1],linecolors[c+2]);
         fill(linecolors[c],linecolors[c+1],linecolors[c+2]);
         line(oldpoint[0],oldpoint[1],point_x,point_y);
       }
       oldpoint = [point_x,point_y];
-      c += 3;
+      c += 4;
+      s += 1;
     }
   } catch(error){
     let blank = '';
@@ -229,7 +243,7 @@ function draw() {
     if (mouseX < 700){
     fill(colornow[0],colornow[1],colornow[2]);
     stroke(0);
-    ellipse(mouseX,mouseY,10,10);
+    ellipse(mouseX,mouseY,size,size);
     }
     
     strokeWeight(2);
@@ -244,6 +258,7 @@ function draw() {
 
     fill(colornow[0],colornow[1],colornow[2]);
     stroke(255);
+    textSize(size);
     text(typed,cursorpos[0],cursorpos[1]);
     
     cursorblinker += 1;
@@ -256,6 +271,17 @@ function draw() {
       stroke(0);
       text('click to put text',260,20);
     }
+    
+    fill(0);
+    rect(800,300,200,10);
+    rect(800+size,290,10,30);
+    textSize(20);
+    text('Size    '+size+' pixels',840,283);    
+    
+    rect(800,325,200,35);
+    fill(255);
+    stroke(0);
+    text('Download modified',815,350);
   }
   
 }
@@ -290,6 +316,7 @@ function mouseReleased(){
   linecolors.push('');
   linecolors.push('');
   linecolors.push('');
+  linecolors.push('');
 }
 
 function mouseDragged(){
@@ -299,7 +326,9 @@ function mouseDragged(){
   } else if (mouseX > 750 && mouseY > 150 && mouseY < 200){
     bwx = mouseX;
     bwy = mouseY;
-  } else if (startedupload){
+  } else if (mouseX > 800 && mouseX < 1000 && mouseY > 290 && mouseY < 320){
+    size = mouseX-800;
+  } else if (startedupload && mouseX < 750){
     linearray.push(mouseX);
     linearray.push(mouseY);
     let c1 = colornow[0];
@@ -308,6 +337,7 @@ function mouseDragged(){
     linecolors.push(c1);
     linecolors.push(c2);
     linecolors.push(c3);
+    linecolors.push(size);
   }
 }
 
@@ -328,6 +358,8 @@ function mousePressed(){
     clicktext = !clicktext;
   } else if (clicktext){
     cursorpos = [mouseX,mouseY];
+  } else if (mouseX > 800 && mouseX < 1000 && mouseY > 325 && mouseY < 350){
+    downloader = 1;
   } else if (startedupload){
     linearray.push(mouseX);
     linearray.push(mouseY);
@@ -337,5 +369,6 @@ function mousePressed(){
     linecolors.push(c1);
     linecolors.push(c2);
     linecolors.push(c3);
+    linecolors.push(size);
   }
 }
