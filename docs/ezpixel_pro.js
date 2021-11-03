@@ -291,10 +291,27 @@ function draw() {
     text('Size    '+size+' pixels',840,283);    
     
     rect(800,325,200,35);
+    rect(800,385,200,35);
     fill(255);
     stroke(0);
     text('Download modified',815,350);
+    
+    fill(255);
+    stroke(0);
+    text('Press u to undo',815,410);
+    
     }
+    
+    if (keyIsDown("u")){
+      let blankscanner = '';
+      let counter1 = linecolors.length-4;
+      while (blankscanner != ''){
+        blankscanner = linecolors[counter1];
+        counter1 -= 1;
+      }
+      linecolors = subset(linecolors, 0, counter1);
+    }
+    
   }
   
 }
@@ -303,14 +320,22 @@ function keyTyped(){
 
   if (clicktext && keyCode != ENTER){
     typed += key;
-  } 
+  } else if (key == "u"){
+    let blankscanner = '';
+    let counter1 = linecolors.length-4;
+    while (blankscanner != ''){
+      blankscanner = linecolors[counter1];
+      counter1 -= 1;
+    }
+    linecolors = subset(linecolors, 0, counter1);
+  }
   keyCode = '';
 }
 
 function keyReleased(){
   if (keyCode == BACKSPACE){
     typed = typed.substring(0, typed.length -1);
-  } 
+  }
 }
 
 function handleFile(file) {
@@ -373,6 +398,16 @@ function mousePressed(){
     cursorpos = [mouseX,mouseY];
   } else if (mouseX > 800 && mouseX < 1000 && mouseY > 325 && mouseY < 350){
     downloader = 1;
+  } else if (mouseX > 800 && mouseX < 1000 && mouseY > 385 && mouseY < 410){
+    {
+      let blankscanner = '';
+      let counter1 = linecolors.length-4;
+      while (blankscanner != ''){
+        blankscanner = linecolors[counter1];
+        counter1 -= 1;
+      }
+      linecolors = subset(linecolors, 0, counter1);
+    }
   } else if (startedupload){
     linearray.push(mouseX);
     linearray.push(mouseY);
