@@ -298,7 +298,7 @@ function draw() {
     
     fill(255);
     stroke(0);
-    text('Press u to Undo',815,410);
+    text('Press u to undo',815,410);
     
     }
     
