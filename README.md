@@ -5,13 +5,13 @@ High quality open source image editor, powered by p5.js
 ## Easy markup
 ![](ezgif.com-gif-maker(1).gif)
 
-## Easy Upload
+## Easy and Fast Upload
 ![](ezgif.com-gif-maker(5).gif)
 
 ## Easily add text and hide parts of image
 ![](ezgif.com-gif-maker(3).gif)
 
-## Easy Download
+## Easy and Fast Download
 ![](ezgif.com-gif-maker(4).gif)
 
 ## Easily manipulate any image (manipulating quindipan's agenda)
