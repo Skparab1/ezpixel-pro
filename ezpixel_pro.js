@@ -41,14 +41,18 @@ var size = 10;
 var drawsizes = [];
 var downloader = 0;
 
+var controlpos = 0;
+var colorfixer = 0;
+
 function draw() {
+  
   if (downloader == 0){
     createCanvas(1024,420); 
   } else if (downloader == 1){
     downloader = 2;
   } else {
     let screen = get();
-    screen.copy(screen, 0, 0, 750, 0, 0, 0, 0, 846);
+    screen.copy(screen, 0, 0, img.width, 0, 0, 0, 0, img.height);
     screen.save("image_mod.png");
     downloader = 0;
   }
@@ -150,32 +154,38 @@ function draw() {
     text('Uploading....',300,200);
     text('Wait for it',300,300);
   } else if (img) {
-    if (img.height >= 420){
-      tint(0, 153, 204);
-      image(img, 0, 0, (420*img.width)/img.height, 420);
-    } else if (img.height <= img.width){
-      tint(0, 153, 204);
-      image(img, 0, 0, width-300, ((width-300)*img.height)/img.width);
+    
+    if (image.height < 500){
+      createCanvas(img.width+400,500);
     } else {
-      tint(0, 153, 204);
-      image(img, 0, 0, (420*img.width)/img.height, 420);
+      createCanvas(img.width+400,img.height);
     }
+    tint(0, 153, 204);
+    image(img, 0, 0, img.width, img.height);
+    
+    controlpos = img.width-650;
+    
+    if (colorfixer < 10){
+      bwx = controlpos+900;
+      colorx = controlpos+900;
+    }      
+    colorfixer += 1;
     
     if (downloader == 0){
       
     fill(150);
-    rect(750,0,300,600);
+    rect(750+controlpos,0,300,700);
     
     textSize(30);
     fill(0);
-    text('Colorpalette',800,45);
+    text('Colorpalette',800+controlpos,45);
     
     let ypos = 50;
     
     while (ypos < 100){
-      let xpos = 750;
+      let xpos = 750+controlpos;
       let cc = 0;
-      while (xpos <= 1300){
+      while (xpos <= 300+controlpos+750){
         red = (255-Math.abs(255-cc))+100; // = 10
         green = (255-Math.abs(510-cc))+100; //265
         blue = (255-Math.abs(765-cc))+100;  // 190
@@ -192,16 +202,16 @@ function draw() {
       ypos += 1;     
     }
     
-    let bwcolorx = 750;
-    while (bwcolorx < 750+300){
-      stroke(bwcolorx-750);
-      fill(bwcolorx-750);
+    let bwcolorx = 750+controlpos;
+    while (bwcolorx < 750+300+controlpos){
+      stroke(bwcolorx-750-controlpos);
+      fill(bwcolorx-750-controlpos);
       rect(bwcolorx,150,1,50);
       
       bwcolorx += 1;
     }
     
-    let bwdifference = bwx-900;
+    let bwdifference = bwx-900-controlpos;
     
     bwdifference = bwdifference * 255/125;
     
@@ -213,18 +223,18 @@ function draw() {
     ellipse(bwx,bwy,10,10);
     
     textSize(20);
-    text('Current color',775,130);
+    text('Current color',775+controlpos,130);
     
     fill(colornow[0],colornow[1],colornow[2]);
     tintcolor = [colornow[0],colornow[1],colornow[2]];
-    rect(910,110,50,20);
+    rect(910+controlpos,110,50,20);
     
     fill(200);
-    rect(760,225,100,35);
-    rect(900,225,100,35);
+    rect(760+controlpos,225,100,35);
+    rect(900+controlpos,225,100,35);
     fill(0);
-    text('Tint',775,250);
-    text('Text',935,250);
+    text('Tint',775+controlpos,250);
+    text('Text',935+controlpos,250);
     stroke(colornow[0],colornow[1],colornow[2]);
     }
     
@@ -249,7 +259,7 @@ function draw() {
   } 
     strokeWeight(2);
     
-    if (mouseX < 700){
+    if (mouseX < 750+controlpos){
     fill(colornow[0],colornow[1],colornow[2]);
     stroke(0);
     ellipse(mouseX,mouseY,size,size);
@@ -285,20 +295,20 @@ function draw() {
     }
     
     fill(0);
-    rect(800,300,200,10);
-    rect(800+size,290,10,30);
+    rect(800+controlpos,300,200,10);
+    rect(800+size+controlpos,290,10,30);
     textSize(20);
-    text('Size    '+size+' pixels',840,283);    
+    text('Size    '+size+' pixels',840+controlpos,283);    
     
-    rect(800,325,200,35);
-    rect(800,385,200,35);
+    rect(800+controlpos,325,200,35);
+    rect(800+controlpos,360,200,35);
     fill(255);
     stroke(0);
-    text('Download modified',815,350);
+    text('Download modified',815+controlpos,350);
     
     fill(255);
     stroke(0);
-    text('Press u to undo',815,410);
+    text('Press u to undo',815+controlpos,385);
     
     }
     
@@ -346,6 +356,8 @@ function handleFile(file) {
   } else {
     img = null;
   }
+  bwx = controlpos+900;
+  colorx = controlpos+900;
 }
 
 function mouseReleased(){
@@ -358,15 +370,15 @@ function mouseReleased(){
 }
 
 function mouseDragged(){
-  if (mouseX > 750 && mouseY > 50 && mouseY < 100){
+  if (mouseX > 750+controlpos && mouseY > 50 && mouseY < 100){
     colorx = mouseX;
     colory = mouseY;
-  } else if (mouseX > 750 && mouseY > 150 && mouseY < 200){
+  } else if (mouseX > 750+controlpos && mouseY > 150 && mouseY < 200){
     bwx = mouseX;
     bwy = mouseY;
-  } else if (mouseX > 800 && mouseX < 1000 && mouseY > 290 && mouseY < 320){
+  } else if (mouseX > 800+controlpos && mouseX < 1000+controlpos && mouseY > 290 && mouseY < 320){
     size = mouseX-800;
-  } else if (startedupload && mouseX < 750){
+  } else if (startedupload && mouseX < 750+controlpos){
     linearray.push(mouseX);
     linearray.push(mouseY);
     let c1 = colornow[0];
@@ -380,25 +392,25 @@ function mouseDragged(){
 }
 
 function mousePressed(){
-  if (mouseX > 600 && mouseX < 700 && mouseY > 300 && mouseY < 450){
+  if (mouseX > 600+controlpos && mouseX < 700+controlpos && mouseY > 300 && mouseY < 450){
     startedupload = true;
-  } else if (mouseX > 750 && mouseY > 50 && mouseY < 100){
+  } else if (mouseX > 750 +controlpos && mouseY > 50 && mouseY < 100){
     colorx = mouseX;
     colory = mouseY;
-  } else if (mouseX > 750 && mouseY > 150 && mouseY < 200){
+  } else if (mouseX > 750+controlpos && mouseY > 150 && mouseY < 200){
     bwx = mouseX;
     bwy = mouseY;
-  } else if (mouseX > 760 && mouseX < 860 && mouseY > 225 && mouseY < 225+35){
+  } else if (mouseX > 760+controlpos && mouseX < 860+controlpos && mouseY > 225 && mouseY < 225+35){
     tintcolor = [colornow[0],colornow[1],colornow[2]];
     print('did tint');
-  } else if (mouseX > 900 && mouseX < 1000 && mouseY > 225 && mouseY < 225+35){
+  } else if (mouseX > 900+controlpos && mouseX < 1000+controlpos && mouseY > 225 && mouseY < 225+35){
     print('did text');
     clicktext = !clicktext;
   } else if (clicktext){
     cursorpos = [mouseX,mouseY];
-  } else if (mouseX > 800 && mouseX < 1000 && mouseY > 325 && mouseY < 350){
+  } else if (mouseX > 800+controlpos && mouseX < 1000+controlpos && mouseY > 325 && mouseY < 350){
     downloader = 1;
-  } else if (mouseX > 800 && mouseX < 1000 && mouseY > 385 && mouseY < 410){
+  } else if (mouseX > 800+controlpos && mouseX < 1000+controlpos && mouseY > 385 && mouseY < 410){
     {
       let blankscanner = '';
       let counter1 = linecolors.length-4;
