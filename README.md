@@ -2,6 +2,9 @@
 High quality open source image editor, powered by p5.js
 ### Use [here](https://skparab1.github.io/ezpixel-pro)
 
+## _New!_ Auto resizes canvas to maintain image quality
+![](ezgif.com-gif-maker(6).gif)
+
 ## Easy markup
 ![](ezgif.com-gif-maker(1).gif)
 
