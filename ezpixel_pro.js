@@ -165,6 +165,33 @@ function draw() {
     
     controlpos = img.width-650;
     
+    if (img.width > 1024 || img.height > 450){
+      if (colorfixer <= 50){
+        fill(0);
+        rect(100,colorfixer-75,550,75);
+        fill(255);
+        textSize(20);
+        text('Canvas resized to fit image and maintian image quality.',125,colorfixer-25-10);
+        text('Use CMD/CTR - to zoom out',125,colorfixer-10);
+      }
+      if (colorfixer > 50 && colorfixer <= 75){
+        fill(0);
+        rect(100,-25,550,75);
+        fill(255);
+        textSize(20);
+        text('Canvas resized to fit image and maintian image quality.',125,25-10);
+        text('Use CMD/CTR - to zoom out',125,50-10);
+      }
+      if (colorfixer > 75){
+        fill(0);
+        rect(100,50-(colorfixer),550,75);
+        fill(255);
+        textSize(20);
+        text('Canvas resized to fit image and maintian image quality.',125,50-(colorfixer) + 25-10);
+        text('Use CMD/CTR - to zoom out',125,50-(colorfixer) + 75-10);
+      }
+    }
+    
     if (colorfixer < 10){
       bwx = controlpos+900;
       colorx = controlpos+900;
